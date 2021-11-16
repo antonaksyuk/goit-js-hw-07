@@ -1,15 +1,13 @@
 import { galleryItems } from './gallery-items.js';
 // Change code below this line
 
-// console.log(galleryItems);
-
 const galleryContainer = document.querySelector('.gallery');
 const galleryMurkup = createGalleryMurkup(galleryItems);
 
 galleryContainer.insertAdjacentHTML('beforeend', galleryMurkup);
 
-function createGalleryMurkup(galleryItems) {
-    return galleryItems
+function createGalleryMurkup(items) {
+    return items
     .map(({ preview, original, description }) => {
 
        return `
@@ -25,6 +23,27 @@ function createGalleryMurkup(galleryItems) {
 </div>
     `;
     })
-    .join('');
+        .join('');
+    }
+galleryContainer.addEventListener('click', onGalleryContainerClick);
+function onGalleryContainerClick(evt) {
+  evt.preventDefault();
+  if (evt.target.nodeName !== 'IMG') {
+    return;
+  }
+  galleryItems.map((img) => {
+    if (img.original === evt.target.dataset.source) {
+      const instance = basicLightbox.create(
+        `<img src=${img.original} width="800" height="600">`
+      );
+      instance.show();
+      document.addEventListener("keydown", evt => {
+        if (evt.key === "Escape") {
+        instance.close();
+      }
+    });
+    }
+  });
 }
+
 
